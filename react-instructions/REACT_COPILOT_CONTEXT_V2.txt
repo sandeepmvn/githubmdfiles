@@ -1,0 +1,150 @@
+React Client Engineering Standards (Copilot / Claude Context)
+This document defines the non-negotiable architecture, coding standards, patterns, and best practices for all React client projects.
+Any AI-generated UI code MUST follow this document. Choose maintainability, accessibility, and consistency over shortcuts.
+1) Tech Stack (Fixed)
+- React (Functional Components only)
+- TailwindCSS for styling
+- shadcn/ui for UI components
+- Skeleton UI for loading states (instead of spinners where possible)
+- SweetAlert2 for Alerts & Toast notifications
+- React Router for routing (if applicable)
+- Axios / Fetch for API calls (project decision)
+2) Project Folder Structure (Recommended)
+src/
+  app/                 # app bootstrap, providers
+  routes/              # route definitions
+  pages/               # page-level screens
+  components/          # reusable UI components
+  features/            # feature-based modules (recommended)
+  services/            # API clients, request wrappers
+  hooks/               # reusable hooks
+  store/               # global state (Redux/Zustand if used)
+  utils/               # helpers, formatters
+  types/               # TypeScript types
+  styles/              # global styles if any
+Feature-based example:
+features/user/
+  components/
+  hooks/
+  api.ts
+  types.ts
+  index.ts
+3) Component Design Rules
+DO
+- Use Functional Components only
+- Keep components small and reusable
+- Prefer composition (smaller UI blocks)
+- Keep UI components presentational when possible
+- Use TypeScript strict typing for props and state
+- Keep file names consistent: UserCard.tsx, UserList.tsx
+DON'T
+- Don’t create huge components (500+ lines)
+- Don’t put API calls inside low-level UI components
+- Don’t repeat Tailwind classes everywhere → extract components
+- Don’t use inline CSS unless absolutely needed
+4) Styling Standards (TailwindCSS)
+DO
+- TailwindCSS only
+- Use consistent spacing: gap-2, gap-4, p-4, py-2 etc.
+- Use responsive utilities: sm:, md:, lg:, xl:
+- Keep consistent layout using flex/grid/container/max-w-*
+DON'T
+- Don’t mix styling approaches
+- Don’t hardcode pixel values repeatedly unless needed
+- Don’t create inconsistent UI spacing
+5) UI Component Standards (shadcn/ui)
+DO
+- Use shadcn/ui components as the base: Button, Card, Dialog, Sheet, DropdownMenu, Table, Tabs, etc.
+- Keep consistent design language across pages
+- Wrap shadcn components into project-specific components if reused
+DON'T
+- Don’t reinvent UI components that already exist in shadcn
+- Don’t copy-paste same UI layout across pages → make reusable components
+6) Loading UX (Skeleton UI)
+DO
+- Use skeleton loaders for async UI
+- Always handle loading, empty state, and error state
+- Show Skeleton while loading, show “No data found” when empty, show toast when failed
+DON'T
+- Don’t show blank pages while loading
+- Don’t block UI unnecessarily
+- Don’t show spinner everywhere when skeleton is better
+7) Alerts & Toast (SweetAlert2 Standard)
+DO
+- Use SweetAlert2 for success toast, error toast, confirmation dialogs
+- Always confirm destructive actions (delete/update)
+DON'T
+- Don’t use browser alert() or confirm()
+- Don’t show raw backend errors directly to users
+8) API Calling Pattern
+DO
+- All API calls must be in services/ or features/*/api.ts
+- Use a common API client wrapper: base URL, headers, token injection, centralized error handling
+- Use abort/cancellation where possible for search filters
+DON'T
+- Don’t call APIs directly inside UI-only components
+- Don’t duplicate API URLs across files
+- Don’t ignore error handling
+9) State Management Standards
+DO
+- Use component state for local UI state
+- Use global state only if truly required (Auth/Profile/shared filters)
+- Use React Query if allowed for caching + server-state
+DON'T
+- Don’t store everything in global state
+- Don’t overcomplicate state flow
+10) Forms & Validation
+DO
+- Use react-hook-form (recommended)
+- Use schema validation (Zod recommended)
+- Always show field-level error messages
+DON'T
+- Don’t build forms without validation
+- Don’t submit forms with unclear errors
+11) Accessibility + UX Quality
+DO
+- Use proper button types (type="button" vs submit)
+- Add labels for inputs
+- Ensure keyboard navigation works
+- Use focus states and good contrast
+- Maintain consistent error and empty states
+DON'T
+- Don’t create UI that only works with mouse
+- Don’t hide important messages only in console logs
+12) Performance Standards
+DO
+- Use useMemo/useCallback only when needed
+- Avoid unnecessary re-renders
+- Lazy load heavy pages if required
+- Paginate big lists and tables
+DON'T
+- Don’t render 1000+ items without virtualization/paging
+- Don’t compute heavy logic inside render
+13) Security Standards (Client Side)
+DO
+- Do not store sensitive tokens in localStorage if avoidable
+- Use HttpOnly cookies where required
+- Sanitize and validate user input
+- Avoid dangerouslySetInnerHTML unless required
+DON'T
+- Don’t expose secrets in frontend env variables
+- Don’t trust client-side validation only
+14) Testing Standards (If applicable)
+DO
+- Unit tests for core components and hooks
+- Integration tests for critical flows
+- Snapshot tests only when necessary
+15) AI Instructions (Copilot/Claude MUST Follow)
+When generating React code:
+1. Use functional components and TypeScript.
+2. Use TailwindCSS only for styling.
+3. Prefer shadcn/ui components.
+4. Use Skeleton UI for loading states.
+5. Use SweetAlert2 for alerts/toasts (no browser alerts).
+6. Keep API logic inside services (not UI components).
+7. Handle loading/empty/error states always.
+8. Build reusable components, avoid duplication.
+9. Keep code clean, readable, and scalable.
+If any requirement is unclear:
+- Choose the safest, most maintainable approach.
+- Do not invent a conflicting architecture.
